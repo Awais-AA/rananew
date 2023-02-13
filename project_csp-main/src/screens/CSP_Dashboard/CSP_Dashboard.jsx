@@ -1,25 +1,32 @@
-import { useState, useEffect } from "react";
-import techmain from "../../resources/techmain.jpg";
-import { useNavigate } from "react-router-dom";
+import { useEffect, useReducer, useState } from "react";
+import updateDashboardValue from "./updateDashboardValue";
+
 import { useDispatch, useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
 import {
-  cspDashboard,
-  attributeList,
+  attributeList
 } from "../../redux/features/packages/packagesSlice";
+import techmain from "../../resources/techmain.jpg";
 import "../LandingPage/landingPage.css";
+const initialState={
+  packageTitle: "",
+  packageDes: "",
+  packagePrice: "",
+  attribute: [],
+}
+
 
 export default function Dashboard() {
+
+
+  const [dashboardValue,dispatchValue]=useReducer(updateDashboardValue,initialState);
   const navigate = useNavigate();
 
-  const [dashboardValue, setdashboardValue] = useState({
-    packageTitle: "",
-    packageDes: "",
-    packagePrice: "",
-    attribute: [],
-  });
-  console.log(dashboardValue)
-  const [attributeValu, setAttributeValue] = useState(
+
+
+  const [attribute, setAttribute] = useState(
     {
+      attributeId:"",
       attributeTitle: "",
       attributeValue: "",
     },
@@ -36,43 +43,45 @@ export default function Dashboard() {
     dispatch(attributeList());
   }, [dispatch]);
 
-  const onChange = (e) => {
-    setdashboardValue((prevValue) => ({
+  const onChange = (value) => {
+    setAttribute((prevValue) => ({
       ...prevValue,
-      [e.target.name]: e.target.value,
+      ...value
+      
     }));
-  };
-  const onChang = (e) => {
-    setAttributeValue((prevValue) => ({
-      ...prevValue,
-      [e.target.name]: e.target.value,
-    }));
-  };
-  const addAttribute = (e) => {
-    setAttributeValue((prev) => [...prev, {}]);
-  };
+    if(value?.attributeTitle){
+     packages.forEach((item)=>{
+        if(value.attributeTitle===item.attribute_name){
+          const attributeId="attributeId"
+          setAttribute((prevValue) => ({
+            ...prevValue,
+            [attributeId]:item.attribute_id,
+            
+          }));
+          
+           
+        }
+        return
+      })
+     
 
-  const submit = (e) => {
-    e.preventDefault();
-    dispatch(cspDashboard(dashboardValue));
-    setdashboardValue({
-      // packageTitle: '',
-      // packageDes: '',
-      // packagePrice: '',
-    });
+    }
 
   };
 
-  const addValueInState = () => {
-    
-   let prevArrState=[...dashboardValue.attribute,attributeValu]
-    setdashboardValue((prev)=>({...prev,['attribute']:prevArrState}));
-    setAttributeValue({
-      attributeTitle:"",
-      attributeValue:""
-    })
 
-  };
+  // const submit = (e) => {
+  //   e.preventDefault();
+  //   dispatch(cspDashboard(dashboardValue));
+  //   setdashboardValue({
+  //     packageTitle: '',
+  //     packageDes: '',
+  //     packagePrice: '',
+  //   });
+
+  // };
+
+ 
 
   const summary = () => {
     navigate("/csp-summary");
@@ -161,7 +170,7 @@ export default function Dashboard() {
                   className="form-control form-control-sm"
                   value={dashboardValue.packageTitle}
                   name="packageTitle"
-                  onChange={onChange}
+                  onChange={(e)=>{dispatchValue({packageTitle:e.target.value,type:"package"})}}
                   type="text"
                   aria-label=".form-control-sm example"
                 />
@@ -183,9 +192,10 @@ export default function Dashboard() {
               <div className="col-8 ">
                 <input
                   className="form-control form-control-sm"
-                  value={dashboardValue.packagePrice}
                   name="packagePrice"
-                  onChange={onChange}
+                  value={dashboardValue.packagePrice}
+                  
+                  onChange={(e)=>{dispatchValue({packagePrice:e.target.value,type:"package"})}}
                   type="number"
                   aria-label=".form-control-sm example"
                 />
@@ -208,9 +218,10 @@ export default function Dashboard() {
                 {" "}
                 <textarea
                   className="form-control"
-                  value={dashboardValue.packageDes}
                   name="packageDes"
-                  onChange={onChange}
+                  value={dashboardValue.packageDes}
+                  
+                  onChange={(e)=>{dispatchValue({packageDes:e.target.value,type:"package"})}}
                   id="floatingTextarea2"
                   style={{ height: "100px" }}
                 ></textarea>
@@ -229,16 +240,16 @@ export default function Dashboard() {
               </div>
               <div className="row mb-3 mt-3">
                 <small>
-                  <select value={attributeValu.attributeTitle} onChange={onChang}  name="attributeTitle" className="btn btn-secondary btn-sm mt-2"> 
-    
+                  <select value={attribute.attributeTitle} onChange={(e)=>{onChange({attributeTitle:e.target.value})}}  name="attributeTitle" className="btn btn-secondary btn-sm mt-2"> 
                 
-                  {packages.map((item,i) => {
+                  {packages.map((item) => {
+                    
                     return (
-                      <>
-                        <option key={i} value={item.attribute_name}>{item.attribute_name}</option> 
+                      
+                        <option key={item.attribute_id} value={item.attribute_name}>{item.attribute_name}</option> 
                           
                         
-                      </>
+                      
                     );
                   })}
                 
@@ -259,9 +270,11 @@ export default function Dashboard() {
                 <div className="col-8 ">
                   <input
                     className="form-control form-control-sm"
-                    value={attributeValu.attributeValue}
+                    value={attribute.attributeValue}
                     name="attributeValue"
-                    onChange={onChang}
+                    onChange={(e)=>{
+                    onChange({attributeValue:e.target.value}); 
+                    }}
                     aria-label=".form-control-sm example"
                   />
 
@@ -274,7 +287,12 @@ export default function Dashboard() {
               <div className="col-11 justify-content-end d-flex">
                 <button
                   className=" btn btn-secondary  rounded-pill"
-                  onClick={addValueInState}
+                  onClick={()=>{dispatchValue({...attribute,type:"attribute"})
+                  setAttribute({
+                    attributeId:"",
+                    attributeTitle:"",
+                    attributeValue:""
+                  })}}
                 >
                   Add
                 </button>
@@ -290,9 +308,9 @@ export default function Dashboard() {
                   </tr>
                 </thead>
                 <tbody className="border">
-                {dashboardValue?.attribute.map((item,i) => {
+                {dashboardValue?.attribute.map((item) => {
                     return (
-                      <tr key={i}>
+                      <tr key={item.attribute_id}>
                         <td>{item.attributeTitle}</td>
                         <td>{item.attributeValue}</td> 
                           

@@ -38,7 +38,7 @@ function App() {
 
 
                {/* Public Screens */}
-
+               {/* {<Route element={<PersistentLogin />}>} */}
 <Route path='/' element={<Layout/>}>
 
   <Route exact path='/' element={<LandingPage />}/>
@@ -51,8 +51,8 @@ function App() {
 
  
 
-   {/* {Persistent Login Route} */}
-   <Route element={<PersistentLogin />}>
+  
+  
 
    
                    {/* {Private Screens For user} */}
@@ -81,10 +81,10 @@ function App() {
   
 
   </Route>
-     {/* {Persistent Login Route} */}
-     </Route>
+    
+     </Routes>
   
-</Routes>
+
 
 
     </>

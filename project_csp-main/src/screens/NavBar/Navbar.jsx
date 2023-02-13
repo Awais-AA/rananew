@@ -1,11 +1,10 @@
-import React from 'react'
-import './navbar.css';
-import { Link, useNavigate } from "react-router-dom";
+import React from 'react';
 import { useSelector } from 'react-redux';
+import { Link, useNavigate } from "react-router-dom";
+import './navbar.css';
 
 export default function Navbar() {
-const {user}=useSelector(state=>state.auth)
-console.log(user)
+const {user,isLoading}=useSelector(state=>state.auth)
 
 const navigate=useNavigate()
   const click = (e) => {
@@ -32,8 +31,8 @@ const navigate=useNavigate()
             
             <li><Link to="/">Home</Link></li>
             <li><Link to="/aboutus">About Us</Link></li>
-            {user?.userName &&  <><li><a>{user.userName}</a></li> <li><a>logout</a></li></> }
-            {!(user) && <> <li><Link to="/signup">Sign Up</Link></li>
+            {user &&  <><Link to="/">{user.userName}</Link> <Link>logout</Link></> }
+            {isLoading? <p>Loading</p>:!(user) &&<> <li><Link to="/signup">Sign Up</Link></li>
             <li><Link to="/login">login</Link></li></> }
             
             <li><Link to="/contactus">Contact Us</Link></li> 

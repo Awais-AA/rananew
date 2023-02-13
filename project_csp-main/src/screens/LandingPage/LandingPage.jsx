@@ -1,17 +1,16 @@
-import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
-import { useEffect } from "react";
-import { useSelector, useDispatch } from "react-redux";
-import { API, cx } from "../SearchBar/searchAPIkey";
-import { showPackages } from "../../redux/features/packages/packagesSlice";
 import axios from "axios";
+import React, { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
+import { showPackages } from "../../redux/features/packages/packagesSlice";
+import { API, cx } from "../SearchBar/searchAPIkey";
 import "./landingPage.css";
 
+import maindigital from "../../resources/maindigital.jpg";
 import tech from "../../resources/tech.jpg";
 import tech2 from "../../resources/tech2.jpg";
 import tech3 from "../../resources/tech3.jpg";
 import tech4 from "../../resources/tech4.png";
-import maindigital from "../../resources/maindigital.jpg";
 
 export default function LandingPage() {
   const [item, setItem] = useState("");
@@ -21,7 +20,6 @@ export default function LandingPage() {
 
   const { packages } = useSelector((state) => state.packages);
 
-  console.log(packages)
 
   const onchange = (e) => {
     setItem(e.target.value);
@@ -47,6 +45,7 @@ export default function LandingPage() {
     setResult("");
   };
 
+  
   useEffect(() => {
     dispatch(showPackages());
    
@@ -232,12 +231,11 @@ export default function LandingPage() {
                     <div className="modal-body w-100">
                       {/* {Search Results} */}
 
-                      {/* {console.log(result)}  */}
 
                       {result?.data?.items.map((item, index) => {
                         return (
-                          <div key={index}>
-                            <div className="col-12 border-bottom pt-3">
+                          <div>
+                            <div className="col-12 border-bottom pt-3"key={index}>
                               <a href={item.displayLink}>{item.displayLink}</a>
                               <a href={item.formattedUrl}>
                                 <h4 style={{ color: "#1e57bf" }}>
@@ -301,12 +299,12 @@ export default function LandingPage() {
               <div className="col-10  featured_packages">
                 <div className="row">
                   {/* {Dynamically showing Feature Package  Details} */}
-                  {packages.map((items) => {
+                  {packages?.map((items) => {
                     return (
                       <>
                         {/* {Dynamic Featued Package Details} */}
                         <div className="col-3 pe-0 mt-4" >
-                          <div key={items.pack_id}
+                          <div 
                             className="card text-center border"
                             onClick={pkgDetails}
                             style={{ width: "15rem" }}
@@ -320,7 +318,7 @@ export default function LandingPage() {
                                 />
                               </div>
                             </div>
-                            <div className="card-body">
+                            <div className="card-body"key={items.pack_id}>
                               <h5 className="card-title">{items.pack_title}</h5>
 
                               <a href="/" onClick={pkgDetails}>

@@ -36,7 +36,6 @@ const state = {
       
         try {
             const response=await axiosPrivate.get('/api/showAttributes/')
-            console.log(response)
             return response.data
             
         } catch (error) {

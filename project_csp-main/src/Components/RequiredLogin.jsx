@@ -3,12 +3,13 @@ import { useSelector } from 'react-redux';
 
 const RequiredLogin = ({allowRole}) => {
     const location = useLocation();
-    const {user}=useSelector(state=>state.auth)
+    const {user,isLoading,isSuccess}=useSelector(state=>state.auth)
 
 
   return (
     <>
-  {(allowRole===user?.getUserType) ?<Outlet /> : <Navigate to='/login' state={{from:location}} replace />} 
+  {(allowRole===user?.getUserType) ?<Outlet />:isLoading && <p>Loading</p>}
+  {!user && !isLoading && !isSuccess && <Navigate to='/login' state={{from:location}} replace />} 
  
   </>
   )

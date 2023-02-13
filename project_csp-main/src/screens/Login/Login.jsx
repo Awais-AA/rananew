@@ -19,13 +19,9 @@ export const Login = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
-
-
  
 useEffect(() => {
-  if(isLoading){
-    console.log('loading');
-  }
+  
   if(isError || message){
    if(message){
     document.getElementById('error3').style.display='block'
@@ -78,11 +74,10 @@ navigate('/user-dashboard')
 
 
     return (
-      <>
-        <form action="post" onSubmit={submit}>
+     !(user) && <><form action="post" onSubmit={submit}>
           <div className="container-fluid">
             <div className="col-12">
-              {/* Payment From */}
+              
               <div className="row border justify-content-center w-100">
                 <div className="col-md-5 col-12  align-content-center">
                   <div className="col-md-12  ">
@@ -175,7 +170,6 @@ navigate('/user-dashboard')
             </div>
           </div>
         </form>
-        
       </>
     );
   };
